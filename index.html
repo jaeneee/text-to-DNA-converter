@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text → DNA-Konverter</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #fce4ec);
+      padding: 2rem;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00695c;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.5rem;
+      background-color: #00897b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .output-section {
+      margin-top: 2rem;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-top: 1.5rem;
+      color: #00796b;
+    }
+
+    .output {
+      white-space: pre-wrap;
+      background: #f9fbe7;
+      padding: 1rem;
+      border: 1px solid #c5e1a5;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-family: monospace;
+    }
+
+    .dna-strand {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      gap: 4px;
+    }
+
+    .base {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      border-radius: 50%;
+      font-size: 14px;
+    }
+
+    .A { background-color: #e57373; }
+    .T { background-color: #64b5f6; }
+    .C { background-color: #81c784; }
+    .G { background-color: #ffd54f; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Text → DNA-Konverter</h1>
+    <p>Gib einen beliebigen Text ein – dieser wird in Binärcode und dann in eine DNA-Sequenz umgewandelt und visualisiert.</p>
+    <textarea id="inputText" rows="4" placeholder="Gib hier deinen Text ein..."></textarea>
+    <button onclick="convertToDNA()">Umwandeln</button>
+
+    <div class="output-section">
+      <div class="section-title">1️⃣ Binärdarstellung:</div>
+      <div class="output" id="binaryOutput"></div>
+
+      <div class="section-title">2️⃣ DNA-Sequenz:</div>
+      <div class="output" id="dnaOutput"></div>
+
+      <div class="section-title">3️⃣ Grafische Darstellung:</div>
+      <div class="dna-strand" id="dnaVisual"></div>
+    </div>
+  </div>
+
+  <script>
+    function convertToDNA() {
+      const text = document.getElementById('inputText').value;
+      let binary = '';
+      for (let i = 0; i < text.length; i++) {
+        binary += text.charCodeAt(i).toString(2).padStart(8, '0');
+      }
+
+      document.getElementById('binaryOutput').textContent = binary;
+
+      let dna = '';
+      let visual = '';
+      const visualContainer = document.getElementById('dnaVisual');
+      visualContainer.innerHTML = '';
+
+      for (let i = 0; i < binary.length; i += 2) {
+        const bits = binary.substr(i, 2);
+        let base = '';
+        switch (bits) {
+          case '00': base = 'A'; break;
+          case '01': base = 'C'; break;
+          case '10': base = 'G'; break;
+          case '11': base = 'T'; break;
+        }
+        dna += base;
+
+        const span = document.createElement('div');
+        span.className = 'base ' + base;
+        span.textContent = base;
+        visualContainer.appendChild(span);
+      }
+
+      document.getElementById('dnaOutput').textContent = dna;
+    }
+  </script>
+</body>
+</html>
